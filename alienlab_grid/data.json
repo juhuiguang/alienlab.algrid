@@ -1,0 +1,12 @@
+{
+	"tableHeader": ["MENU_ID", "MENU_NAME", "MENU_TYPE", "MENU_PID", "MENU_CONTENT", "MENU_ATTR", "MENU_STATUS", "MENU_SORT"],
+	"tableName": "tb_menu",
+	"tableRows": [
+		["15", "系统设置", "模块", "0", "", "circle", "1", "1"],
+		["48", "用户登录账户设置", "子功能", "15", "userManage.jsp", "list layout", "1", "200"],
+		["49", "菜单设置", "子功能", "15", "menu_manage.jsp", "list layout", "1", "201"],
+		["50", "角色设置", "子功能", "15", "role_manage.jsp", "list layout", "1", "202"],
+		["51", "角色菜单设置", "子功能", "15", "roleMenuConfig.jsp", "list layout", "1", "203"],
+		["52", "用户角色设置", "子功能", "15", "roleUserConfig.jsp", "list layout", "1", "204"]
+	]
+}
