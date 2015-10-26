@@ -113,6 +113,7 @@
 				currentdata = data;
 				var tbody = renderTable(data);
 				altable.append(tbody);
+				initSelectionEvent();
 				if (tableconfig.onload) {
 					tableconfig.onload(data);
 				}
@@ -120,7 +121,9 @@
 
 			var reload = function() {
 				requestData(function(dt) {
-					setdata(dt);
+					if(dt.tableRows&&dt.tableRows.length>0){
+						setdata(dt);
+					}
 				});
 			}
 
@@ -264,10 +267,11 @@
 				parentNode.append(altable);
 				//加载数据
 				reload();
+				initSelectionEvent();
 			}
 
 			inittable();
-			initSelectionEvent();
+			
 			this.currentdata = currentdata;
 			this.reload = reload;
 			this.setdata = setdata;

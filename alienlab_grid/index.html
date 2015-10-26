@@ -1,58 +1,60 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="utf-8" />
-		<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
-		<script type="text/javascript" src="js/jquery.alienlab.algrid.js" ></script>
+		<script type="text/javascript" src="js/jquery-2.1.0.js"></script>
+		<script type="text/javascript" src="js/jquery.alienlab.algrid.js"></script>
 		<link rel="stylesheet" href="js/jquery.alienlab.algrid.css" />
 		<title>algrid</title>
 	</head>
+
 	<body>
 		<div id="algrid"></div>
 		<button id="btnselected">获取选中元素</button>
+		<button id="btnsetdata">填充数据</button>
 	</body>
 	<script>
-		$(function(){
-			var table=$("#algrid").algrid({
-				header:[
-					{
-						field: 'MENU_ATTR',
-						name: "菜单属性",
-						rowspan:true
-					}, {
-						field: 'MENU_NAME',
-						name: "菜单名称"
-					}, {
-						field: 'MENU_TYPE',
-						name: "菜单类型",
-						rowspan:true
-					}, {
-						field: 'MENU_PID',
-						name: "父级菜单",
-						rowspan:true
-					}
-				],
+		$(function() {
+			var table = $("#algrid").algrid({
+				header: [{
+					field: 'MENU_ATTR',
+					name: "菜单属性",
+					rowspan: true
+				}, {
+					field: 'MENU_NAME',
+					name: "菜单名称"
+				}, {
+					field: 'MENU_TYPE',
+					name: "菜单类型",
+					rowspan: true
+				}, {
+					field: 'MENU_PID',
+					name: "父级菜单"
+				}],
 				rownumber: true,
-				datafrom:"json",
-				data:{
+				datafrom: "json",
+				selectModal: "cell"
+			});
+			console.log(table);
+			$("#btnselected").click(function() {
+				console.log(table.getSelection());
+			});
+			$("#btnsetdata").click(function() {
+				table.setdata({
 					"tableHeader": ["MENU_ID", "MENU_NAME", "MENU_TYPE", "MENU_PID", "MENU_CONTENT", "MENU_ATTR", "MENU_STATUS", "MENU_SORT"],
 					"tableName": "tb_menu",
 					"tableRows": [
 						["15", "系统设置", "模块", "0", "", "circle", "1", "1"],
-						["48", "用户登录账户设置", "子功能", "15", "userManage.jsp", "list layout", "1", "200"],
+						["48", "用户登录账户设置", "模块", "15", "userManage.jsp", "circle", "1", "200"],
 						["49", "菜单设置", "子功能", "15", "menu_manage.jsp", "list layout", "1", "201"],
 						["50", "角色设置", "子功能", "15", "role_manage.jsp", "list layout", "1", "202"],
 						["51", "角色菜单设置", "子功能", "15", "roleMenuConfig.jsp", "list layout", "1", "203"],
 						["52", "用户角色设置", "子功能", "15", "roleUserConfig.jsp", "list layout", "1", "204"]
 					]
-				},
-				selectModal:"cell"
-			});
-			console.log(table);
-			$("#btnselected").click(function(){
-				console.log(table.getSelection());
+				});
 			});
 		});
-		
 	</script>
+
 </html>
