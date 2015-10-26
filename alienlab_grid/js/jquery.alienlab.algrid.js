@@ -78,6 +78,7 @@
 				} else {
 					$(".altable .selected").removeClass("selected");
 					el.addClass("selected");
+					
 					if (source.onSelect) {
 						source.onSelect(getSelected());
 					} else if (tableconfig.onSelect) {
@@ -215,10 +216,40 @@
 								tr.attr("key", data.tableRows[i][pos]);
 							}
 						}
+						//如果该列需要支持rowspan
+						if(tableconfig.header[j].rowspan){
+							td.addClass("rospan rospan_"+j);
+						}
 						tr.append(td);
 					}
 					tbody.append(tr);
 				}
+				//处理rowspan
+				for(var i=0;i<tableconfig.header.length;i++){
+					//如果当前列需要rowspan操作
+					if(tableconfig.header[i].rowspan){
+						var column=tbody.find(".rospan_"+i);
+						for(var j=0;j<column.length;j++){
+							$(column[j]).addClass("delrowspan");
+						}
+						var groups={};
+						for(var j=0;j<column.length;j++){
+							var text=$(column[j]).text();
+							var count=1;
+							for(var k=j+1;k<column.length;k++){
+								if($(column[k]).text()==text){
+									count+=1;
+								}else{
+									break;
+								}
+							}
+							$(column[j]).attr("rowspan",count);
+							$(column[j]).removeClass("delrowspan");
+							j+=count-1;
+						}
+					}
+				}
+				tbody.find(".delrowspan").remove();
 				return tbody;
 			}
 
