@@ -1,6 +1,7 @@
 (function($, window) {
 	$.fn.extend({
 		algrid: function(config) {
+			var source = this;
 			var parentNode = $(this);
 			//默认参数
 			var defaultconfig = {
@@ -37,48 +38,111 @@
 				},
 				onload: function() {
 
-				}
+				},
+				selectModal: "cell"
 			};
 
 			//初始化参数
 			var tableconfig = $.extend(true, defaultconfig, config);
 			var altable = {};
 			var currentdata = {};
-			var setdata=function(data){
-				currentdata=data;
-				var tbody=renderTable(data);
+
+			var getSelected = function() {
+				//获取当前行列索引，和data值
+				var selectNode = $(".altable .selected");
+				if (selectNode.length == 0) {//如果不存在选择元素，返回null
+					return null;
+				} else {//获取当前选择元素值
+					var selectData = {
+						node: selectNode,
+						value: "",
+						rowIndex: 0,
+						columnIndex: 0
+					}
+					if (tableconfig.selectModal == "cell") {
+						selectData.value = selectNode.text();
+						selectData.rowIndex = selectNode.parent().index();
+						selectData.columnIndex = selectNode.index();
+					} else if (tableconfig.selectModal == "row") {
+						selectData.rowIndex = selectNode.index();
+						selectData.value = currentdata.tableRows[selectData.rowIndex];
+					}
+					return selectData;
+				}
+
+			}
+
+			var setSelected = function(el) {
+				if (el.hasClass("selected")) {
+					el.removeClass("selected");
+				} else {
+					$(".altable .selected").removeClass("selected");
+					el.addClass("selected");
+					if (source.onSelect) {
+						source.onSelect(getSelected());
+					} else if (tableconfig.onSelect) {
+						tableconfig.onSelect(getSelected());
+					}
+				}
+
+			}
+
+			//初始化鼠标选择事件
+			var initSelectionEvent = function() {
+				if (tableconfig.selectModal == "cell") { //如果表格设置为列选择
+					$(".altable td").hover(function() {
+						$(this).addClass("hover");
+					}, function() {
+						$(this).removeClass("hover");
+					}).click(function() {
+						setSelected($(this));
+					});
+				} else if (tableconfig.selectModal == "row") { //表格设置为行选择
+					$(".altable tr").hover(function() {
+						$(this).addClass("hover");
+					}, function() {
+						$(this).removeClass("hover");
+					}).click(function() {
+						setSelected($(this));
+					});
+				}
+			}
+
+			var setdata = function(data) {
+				currentdata = data;
+				var tbody = renderTable(data);
 				altable.append(tbody);
-				if(tableconfig.onload){
+				if (tableconfig.onload) {
 					tableconfig.onload(data);
 				}
 			}
-			
-			var reload=function(){
+
+			var reload = function() {
 				requestData(function(dt) {
 					setdata(dt);
 				});
 			}
-			
+
 
 			//绘制表头
 			var drawHeader = function() {
-				var header = $('<thead><tr></tr></thead>');
-				if (tableconfig.header && tableconfig.header.length > 0) {
-					//如果显示行号
-					if (tableconfig.rownumber) {
-						var item = $("<th>序号</th>");
-						header.append(item);
-					}
-					for (var i = 0; i < tableconfig.header.length; i++) {
-						if (tableconfig.header[i].hidden) {
-							continue;
+					var header = $('<thead><tr></tr></thead>');
+					if (tableconfig.header && tableconfig.header.length > 0) {
+						//如果显示行号
+						if (tableconfig.rownumber) {
+							var item = $("<th>序号</th>");
+							header.append(item);
 						}
-						var item = $("<th>" + tableconfig.header[i].name + "</th>");
-						header.append(item);
+						for (var i = 0; i < tableconfig.header.length; i++) {
+							if (tableconfig.header[i].hidden) {
+								continue;
+							}
+							var item = $("<th>" + tableconfig.header[i].name + "</th>");
+							header.append(item);
+						}
 					}
+					return header;
 				}
-				return header;
-			}
 				//获取数据
 			var requestData = function(callback) {
 				var tabledata = {};
@@ -157,11 +221,12 @@
 				}
 				return tbody;
 			}
-			
+
 			//初始化表格
 			var inittable = function() {
 				//初始化列表
-				altable = $('<table></table>').attr("id", "altable_" + parentNode.id);
+				altable = $('<table></table>').attr("id", "altable_" + parentNode.attr("id"))
+					.attr("class", "altable");
 				//绘制表头
 				altable.append(drawHeader());
 				//将表格插入dom
@@ -169,12 +234,16 @@
 				//加载数据
 				reload();
 			}
-			
-			inittable();
 
-			this.currentdata=currentdata;
-			this.reload=reload;
-			this.setdata=setdata;
+			inittable();
+			initSelectionEvent();
+			this.currentdata = currentdata;
+			this.reload = reload;
+			this.setdata = setdata;
+			this.getSelection = function() {
+				return getSelected();
+			}
+			return this;
 		}
 	});
 })($, window);

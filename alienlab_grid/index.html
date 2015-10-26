@@ -4,29 +4,32 @@
 		<meta charset="utf-8" />
 		<script type="text/javascript" src="js/jquery-2.1.0.js" ></script>
 		<script type="text/javascript" src="js/jquery.alienlab.algrid.js" ></script>
+		<link rel="stylesheet" href="js/jquery.alienlab.algrid.css" />
 		<title>algrid</title>
 	</head>
 	<body>
 		<div id="algrid"></div>
+		<button id="btnselected">获取选中元素</button>
 	</body>
 	<script>
 		$(function(){
-			$("#algrid").algrid({
+			var table=$("#algrid").algrid({
 				header:[
 					{
-						field: 'MENU_ID',
-						name: "列1"
+						field: 'MENU_ATTR',
+						name: "菜单属性"
 					}, {
 						field: 'MENU_NAME',
-						name: "列2"
+						name: "菜单名称"
 					}, {
 						field: 'MENU_TYPE',
-						name: "列3"
+						name: "菜单类型"
 					}, {
 						field: 'MENU_PID',
-						name: "列4"
+						name: "父级菜单"
 					}
 				],
+				rownumber: true,
 				datafrom:"json",
 				data:{
 					"tableHeader": ["MENU_ID", "MENU_NAME", "MENU_TYPE", "MENU_PID", "MENU_CONTENT", "MENU_ATTR", "MENU_STATUS", "MENU_SORT"],
@@ -39,7 +42,12 @@
 						["51", "角色菜单设置", "子功能", "15", "roleMenuConfig.jsp", "list layout", "1", "203"],
 						["52", "用户角色设置", "子功能", "15", "roleUserConfig.jsp", "list layout", "1", "204"]
 					]
-				}
+				},
+				selectModal:"row"
+			});
+			console.log(table);
+			$("#btnselected").click(function(){
+				console.log(table.getSelection());
 			});
 		});
 		

@@ -1,0 +1,44 @@
+.altable{
+	width:100%;
+	font-family: "微软雅黑";
+	border-radius:0.5em;
+	border:1px solid rgba(34,36,38,.15);
+	color:#333;
+	border-spacing:0px;
+	border-collapse:separate;
+}
+
+
+.altable th,.altable td{
+	border-left:1px solid rgba(34,36,38,.15);	
+	border-top:1px solid rgba(34,36,38,.15);	
+	height:45px;
+}
+
+.altable th{
+	font-weight:800;
+	font-size:100%;
+	text-align:center;
+	color:#000;
+	border-top:none;
+}
+.altable thead th:nth-of-type(1){
+	border-left:none;
+}
+
+.altable tr td:nth-of-type(1){
+	border-left:none;
+}
+
+.altable td{
+	text-align:center;
+}
+
+.altable tr:nth-of-type(odd){
+	
+}
+
+.altable .hover,.altable .selected{
+	background-color:#696969;
+	color:#fff;
+}
