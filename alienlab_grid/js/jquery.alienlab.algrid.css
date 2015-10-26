@@ -2,17 +2,16 @@
 	width:100%;
 	font-family: "微软雅黑";
 	border-radius:0.5em;
-	border:1px solid rgba(34,36,38,.15);
-	color:#333;
+	color:#555;
 	border-spacing:0px;
 	border-collapse:separate;
+	padding:5px 15px;
 }
 
 
 .altable th,.altable td{
-	border-left:1px solid rgba(34,36,38,.15);	
-	border-top:1px solid rgba(34,36,38,.15);	
-	height:45px;
+	border-bottom:1px solid #ccc;	
+	height:50px;
 }
 
 .altable th{
@@ -21,6 +20,7 @@
 	text-align:center;
 	color:#000;
 	border-top:none;
+	border:none;
 }
 .altable thead th:nth-of-type(1){
 	border-left:none;
@@ -39,6 +39,7 @@
 }
 
 .altable .hover,.altable .selected{
-	background-color:#696969;
-	color:#fff;
+	background-color:rgba(255,218,155,0.5);
+	color:#000;
+	font-weight:500;
 }
