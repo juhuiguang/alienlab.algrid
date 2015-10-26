@@ -1,3 +1,9 @@
+/***
+ * @author Joyce
+ * @param {Object} $
+ * @param {Object} window
+ * @version 1.0
+ */
 (function($, window) {
 	$.fn.extend({
 		algrid: function(config) {
@@ -7,27 +13,34 @@
 			var defaultconfig = {
 				debug: false,
 				datafrom: "json", //数据来源 json:json数据文件,http发起数据请求
+				/**
+				 * 可以在初始化时直接指定表格数据
+				 */
 				data: {},
 				request: {
 					url: "", //当datafrom为http时，发起数据请求的url
 					postdata: {} //当发起请求时提交的参数
 				},
 				rownumber: false, //是否显示行号
-				header: [ //列表表头配置
-					{
-						field: '',
-						name: "列1"
-					}, {
-						field: '',
-						name: "列2"
-					}, {
-						field: '',
-						name: "列3"
-					}, {
-						field: '',
-						name: "列4"
-					}
-				],
+				/***
+				 * 列表表头配置：
+				 * 1、支持render函数配置，自定义输出内容，render函数传入参数1、单元格值  2、行数据 3、整表数据
+				 * 2、支持hidden属性配置，设置隐藏列
+				 * 3、支持单元格按钮配置，请指定type:button,并且指定content:[{name:"button",color:"#aaa",click:click()}]为按钮数组。
+				 */
+				header: [{
+					field: '',
+					name: "列1"
+				}, {
+					field: '',
+					name: "列2"
+				}, {
+					field: '',
+					name: "列3"
+				}, {
+					field: '',
+					name: "列4"
+				}],
 				page: false, //列表是否分页
 				pageconfig: { //列表分页配置
 					url: "", //分页请求的url
@@ -36,9 +49,15 @@
 						length: 10 //页长度
 					}
 				},
+				/**
+				 * 数据加载完成后调用
+				 */
 				onload: function() {
 
 				},
+				/**
+				 * 表格选中模式，cell为单元格选中，row为整行选中
+				 */
 				selectModal: "cell"
 			};
 
@@ -50,9 +69,9 @@
 			var getSelected = function() {
 				//获取当前行列索引，和data值
 				var selectNode = $(".altable .selected");
-				if (selectNode.length == 0) {//如果不存在选择元素，返回null
+				if (selectNode.length == 0) { //如果不存在选择元素，返回null
 					return null;
-				} else {//获取当前选择元素值
+				} else { //获取当前选择元素值
 					var selectData = {
 						node: selectNode,
 						value: "",
@@ -78,7 +97,7 @@
 				} else {
 					$(".altable .selected").removeClass("selected");
 					el.addClass("selected");
-					
+
 					if (source.onSelect) {
 						source.onSelect(getSelected());
 					} else if (tableconfig.onSelect) {
@@ -121,7 +140,7 @@
 
 			var reload = function() {
 				requestData(function(dt) {
-					if(dt.tableRows&&dt.tableRows.length>0){
+					if (dt.tableRows && dt.tableRows.length > 0) {
 						setdata(dt);
 					}
 				});
@@ -220,35 +239,35 @@
 							}
 						}
 						//如果该列需要支持rowspan
-						if(tableconfig.header[j].rowspan){
-							td.addClass("rospan rospan_"+j);
+						if (tableconfig.header[j].rowspan) {
+							td.addClass("rospan rospan_" + j);
 						}
 						tr.append(td);
 					}
 					tbody.append(tr);
 				}
 				//处理rowspan
-				for(var i=0;i<tableconfig.header.length;i++){
+				for (var i = 0; i < tableconfig.header.length; i++) {
 					//如果当前列需要rowspan操作
-					if(tableconfig.header[i].rowspan){
-						var column=tbody.find(".rospan_"+i);
-						for(var j=0;j<column.length;j++){
+					if (tableconfig.header[i].rowspan) {
+						var column = tbody.find(".rospan_" + i);
+						for (var j = 0; j < column.length; j++) {
 							$(column[j]).addClass("delrowspan");
 						}
-						var groups={};
-						for(var j=0;j<column.length;j++){
-							var text=$(column[j]).text();
-							var count=1;
-							for(var k=j+1;k<column.length;k++){
-								if($(column[k]).text()==text){
-									count+=1;
-								}else{
+						var groups = {};
+						for (var j = 0; j < column.length; j++) {
+							var text = $(column[j]).text();
+							var count = 1;
+							for (var k = j + 1; k < column.length; k++) {
+								if ($(column[k]).text() == text) {
+									count += 1;
+								} else {
 									break;
 								}
 							}
-							$(column[j]).attr("rowspan",count);
+							$(column[j]).attr("rowspan", count);
 							$(column[j]).removeClass("delrowspan");
-							j+=count-1;
+							j += count - 1;
 						}
 					}
 				}
@@ -271,13 +290,28 @@
 			}
 
 			inittable();
-			
+
+
+			/**
+			 * 获取当前表格数据
+			 */
 			this.currentdata = currentdata;
+			/**
+			 * 重新加载数据方法
+			 */
 			this.reload = reload;
+			/**
+			 * 设置表格数据方法
+			 */
 			this.setdata = setdata;
+			/**
+			 * 获取当前选中对象
+			 */
 			this.getSelection = function() {
 				return getSelected();
 			}
+
+
 			return this;
 		}
 	});
